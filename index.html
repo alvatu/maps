@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+ 	<meta charset="utf-8">
+ 	<title>Mapa</title>
+ 	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	<script type="text/javascript" src="lib/gmaps.js"></script>
+	<script type="text/javascript" src="funciones/funciones.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="estilos/miestilo.css" />
+</head>
+<body>
+	<header>
+		<h1>Predicción Meteorológica</h1>
+		<div id="botones"> 
+			<input type="text" maxlength="300" id="address" class="boton" placeholder="Dirección" /> 
+			<input type="button" class="boton" id="search" value="Buscar" /> 
+			<input type="button" id="inicializar" class="boton" value="Inicializar"/>  
+		</div>
+    </header>
+
+    <section id="seccion">
+		<div id="map"></div>
+	</section>
+</body>
+</html>
