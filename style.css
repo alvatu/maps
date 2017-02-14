@@ -1,0 +1,48 @@
+body{
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  background-color: #E6E6E6;
+  border-top:15px;
+}
+
+header{
+  text-align: center;
+}
+
+header h1{
+  display:inline;
+  margin-right: 50px;
+  font-style: italic;
+}
+
+header #botones{
+  display:inline;
+}
+
+header #botones #address{
+  text-align:left;
+  width:200px;
+  padding-left: 7px;
+}
+
+header #botones .boton{
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  font-weight: bold;
+  width:100px;
+}
+
+section #map{
+  display: block;
+  margin: 0;
+  padding: 0;
+  position: absolute; /* posición absoluta a navegador */
+  top: 100px;      /* 100px debajo de borde de navegador */
+  left: 150px;       
+  right: 150px;
+  bottom: 100px;
+  background: #FFFFFF; /* blanco si no hay mapa */
+  border-radius: 8px;
+  box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
+  border-width: 10px;
+}
