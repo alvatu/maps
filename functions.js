@@ -1,5 +1,4 @@
-var map, lat, lng, posicioninicial,geocoder;
-var x,y;      //posicion del raton en la pantalla
+var map, lat, lng, posicioninicial,geocoder,contentString,datosactuales,datosfuturos,marker;
 var apikey = "d890118bdd72ea2c15a196a419e3f82b"; //clave de acceso para la api openweathermap
  
 function comenzar(){
@@ -8,8 +7,6 @@ function comenzar(){
   miboton.addEventListener("click",inicializar,false);  //pongo el boton a la escucha del evento click
   var mibotonbuscar = document.getElementById("search");
   mibotonbuscar.addEventListener("click",buscar,false);
-  var seccion = document.getElementById("seccion");
-  seccion.addEventListener("mousemove",posicionraton,false);
   var caja  = document.getElementById("address");
   caja.addEventListener("keypress",buscador,false);
 
@@ -22,8 +19,6 @@ function comenzar(){
        crearmapa(lat,lng);      // muestra mapa centrado en coords [lat, lng]
        map.addMarker({ lat: lat, lng: lng});   // marcador en [lat, lng]
        geocoder = new google.maps.Geocoder();
-
-
     },
     error: function(error) { alert('Geolocalización falla: ' + error.message); },
     not_supported: function(){ alert("Su navegador no soporta geolocalización"); },
@@ -37,7 +32,6 @@ function crearmapa(lat,lng){
     lat: lat,
     lng: lng,
     click: seleccionarpunto,
-    tap: seleccionarpunto
   });
 }
 
@@ -46,24 +40,46 @@ function seleccionarpunto(e){
   map.removeMarkers();    // borramos el marcador anterior
   lat = e.latLng.lat();   // guardamos los valores de la latitud y la longitud para dibujarlos en el mapa
   lng = e.latLng.lng();
-  map.addMarker({ lat: lat, lng: lng});   // ponemos el nuevo marcador con las coordenadas actuales
+  marker = map.addMarker({ lat: lat, lng: lng});   // ponemos el nuevo marcador con las coordenadas actuales
 
-  //creamos un pop up donde se muestran los datos de openweathermap
-  window.open("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lng + "&mode=html&appid=" + apikey + "&units=metric&lang=es","","status=no,directories=no,menubar=no,toolbar=no,scrollbars=no,location=no,resizable=no,titlebar=no, width=160, height=170, top=" + y + ", left=" + x);       
+  $.ajax({
+    url: "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lng + "&appid=" + apikey + "&units=metric&lang=es",
+    success: function( data ) {
+      datosactuales = data;
+          procesaDatos();
+    },
+    error: function(){
+      alert("¡Ups! No puedo obtener información de la API");
+    }
+  });
 };
+
+function procesaDatos(){
+
+ $.ajax({
+    url: "http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lng + "&appid=" + apikey + "&units=metric&lang=es",
+    success: function( data ) {
+      datosfuturos = data;
+          muestraDatos();
+    },
+    error: function(){
+      alert("¡Ups! No puedo obtener información de la API");
+    }
+  });
+}
+
+function muestraDatos(){
+  
+  contentString = "<div>Temperatura actual: " + datosactuales.main.temp +  " ºC </div> <div> Tempetatura mañana: " + datosfuturos.list[1].main.temp_max + " ºC </div>";
+  var infowindow = new google.maps.InfoWindow({content: contentString});
+  infowindow.open(map, marker);
+}
 
 function inicializar(){     // mostramos el mapa en la posicion inicial 
       
 	crearmapa(posicioninicial[0],posicioninicial[1]);    // muestra mapa centrado en coords [lat, lng]
   map.addMarker({ lat: posicioninicial[0], lng: posicioninicial[1]});   // añade marcador en [lat, lng]
   document.getElementById("address").value = "";
-  window.open("http://api.openweathermap.org/data/2.5/weather?lat=" + posicioninicial[0] + "&lon=" + posicioninicial[1] + "&mode=html&appid=" + apikey + "&units=metric&lang=es","","status=no,directories=no,menubar=no,toolbar=no,scrollbars=no,location=no,resizable=no,titlebar=no, width=160, height=170, top=" + window.innerHeight/2 + ", left=" + window.innerWidth/2);         
-}
-
-function posicionraton(event){   // guardamos la posicion del raton en la pantalla para poder mostrar el pop up en el lugar correcto 
-
-  x = event.clientX;
-  y = event.clientY;
 }
 
 function buscar() {   // buscamos las coordenadas de una direccion y la buscamos en el mapa
@@ -75,25 +91,17 @@ function buscar() {   // buscamos las coordenadas de una direccion y la buscamos
 
     crearmapa(results[0].geometry.location.lat().toFixed(6),results[0].geometry.location.lng().toFixed(6))
     map.addMarker({ lat: results[0].geometry.location.lat().toFixed(6), lng: results[0].geometry.location.lng().toFixed(6)});   // marcador en [lat, lng]
-    window.open("http://api.openweathermap.org/data/2.5/weather?lat=" + results[0].geometry.location.lat().toFixed(6) + "&lon=" + results[0].geometry.location.lng().toFixed(6) + "&mode=html&appid=" + apikey + "&units=metric&lang=es","","status=no,directories=no,menubar=no,toolbar=no,scrollbars=no,location=no,resizable=no,titlebar=no, width=160, height=170, top=" + window.innerHeight/2 + ", left=" + window.innerWidth/2);       
+  //  window.open("http://api.openweathermap.org/data/2.5/weather?lat=" + results[0].geometry.location.lat().toFixed(6) + "&lon=" + results[0].geometry.location.lng().toFixed(6) + "&mode=html&appid=" + apikey + "&units=metric&lang=es","","status=no,directories=no,menubar=no,toolbar=no,scrollbars=no,location=no,resizable=no,titlebar=no, width=160, height=170, top=" + window.innerHeight/2 + ", left=" + window.innerWidth/2);       
   
   }else{ alert("Dirección no encontrada!!!"); }
 
   });
 }
 
-function buscador(e,valor){
+function buscador(e,valor){    // Busca la ciudad introducida cuando se pulsa enter
 
   tecla = (document.all) ? e.keyCode : e.which;
   if (tecla==13) buscar();
 }
-
-function propiedades(){
-  alert(document.all['seccion'].style.pixelTop);//Posición coordenada y con respecto a la parte superior de la pantalla.
-  alert(document.all['seccion'].style.pixelLeft);//Posición coordenada x con respecto a la parte izquierda de la pantalla.
-  alert(document.all['seccion'].style.pixelHeight);//Altura de la capa. En tu caso sale 0 porque no tiene definida la altura;
-  alert(document.all['seccion'].style.pixelWidth);//Anchura de la capa.En tu caso sale 0 porque no tiene definida la anchura;
-  alert(document.all['seccion'].id);//Identificador de la capa.
-} 
    
 window.addEventListener("load",comenzar,false);
