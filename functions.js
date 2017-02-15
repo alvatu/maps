@@ -10,6 +10,8 @@ function comenzar(){
   mibotonbuscar.addEventListener("click",buscar,false);
   var seccion = document.getElementById("seccion");
   seccion.addEventListener("mousemove",posicionraton,false);
+  var caja  = document.getElementById("address");
+  caja.addEventListener("keypress",buscador,false);
 
   // guarda coords en lat y lng
   GMaps.geolocate({
@@ -51,7 +53,8 @@ function seleccionarpunto(e){
 function inicializar(){     // mostramos el mapa en la posicion inicial 
       
 	crearmapa(posicioninicial[0],posicioninicial[1]);    // muestra mapa centrado en coords [lat, lng]
-  map.addMarker({ lat: posicioninicial[0], lng: posicioninicial[1]});   // añade marcador en [lat, lng]  
+  map.addMarker({ lat: posicioninicial[0], lng: posicioninicial[1]});   // añade marcador en [lat, lng]
+  document.getElementById("address").value = "";  
 }
 
 function posicionraton(event){   // guardamos la posicion del raton en la pantalla para poder mostrar el pop up en el lugar correcto 
@@ -69,10 +72,16 @@ function buscar() {   // buscamos las coordenadas de una direccion y la buscamos
 
     crearmapa(results[0].geometry.location.lat().toFixed(6),results[0].geometry.location.lng().toFixed(6))
     map.addMarker({ lat: results[0].geometry.location.lat().toFixed(6), lng: results[0].geometry.location.lng().toFixed(6)});   // marcador en [lat, lng]
-    //  window.open("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lng + "&mode=html&appid=" + apikey + "&units=metric&lang=es","","status=no,directories=no,menubar=no,toolbar=no,scrollbars=no,location=no,resizable=no,titlebar=no, width=160, height=170, top=" + y + ", left=" + x);
-  }else{ alert('Geocode no tuvo éxito por la siguiente razón: ' + status); }
+  
+  }else{ alert("Dirección no encontrada!!!"); }
 
   });
+}
+
+function buscador(e,valor){
+
+  tecla = (document.all) ? e.keyCode : e.which;
+  if (tecla==13) buscar();
 }
    
 window.addEventListener("load",comenzar,false);
