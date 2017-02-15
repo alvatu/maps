@@ -11,7 +11,7 @@ function comenzar(){
   var seccion = document.getElementById("seccion");
   seccion.addEventListener("mousemove",posicionraton,false);
   var caja  = document.getElementById("address");
-  caja.addEventListener("keypress",buscar_en_caja,false);
+  caja.addEventListener("keypress",buscador,false);
 
   // guarda coords en lat y lng
   GMaps.geolocate({
@@ -72,13 +72,13 @@ function buscar() {   // buscamos las coordenadas de una direccion y la buscamos
 
     crearmapa(results[0].geometry.location.lat().toFixed(6),results[0].geometry.location.lng().toFixed(6))
     map.addMarker({ lat: results[0].geometry.location.lat().toFixed(6), lng: results[0].geometry.location.lng().toFixed(6)});   // marcador en [lat, lng]
-    //  window.open("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lng + "&mode=html&appid=" + apikey + "&units=metric&lang=es","","status=no,directories=no,menubar=no,toolbar=no,scrollbars=no,location=no,resizable=no,titlebar=no, width=160, height=170, top=" + y + ", left=" + x);
+  
   }else{ alert("Dirección no encontrada!!!"); }
 
   });
 }
 
-function buscar_en_caja(e,valor){
+function buscador(e,valor){
 
   tecla = (document.all) ? e.keyCode : e.which;
   if (tecla==13) buscar();
