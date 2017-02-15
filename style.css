@@ -44,5 +44,4 @@ section #map{
   background: #FFFFFF; /* blanco si no hay mapa */
   border-radius: 8px;
   box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
-  border-width: 10px;
 }
