@@ -68,7 +68,7 @@ function procesaDatos(){
   });
 }
 
-function muestraDatos(){
+function muestraDatos(){    // mostramos los datos en el pop up
   
   contentString = "<div>Temperatura actual: " + datosactuales.main.temp +  " ºC </div> <div> Tempetatura mañana: " + datosfuturos.list[1].main.temp_max + " ºC </div>";
   var infowindow = new google.maps.InfoWindow({content: contentString});
