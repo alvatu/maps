@@ -6,6 +6,8 @@ La aplicación muestra un mapa centrado en la posición del usuario, usando las 
 * CSS
 * Javascript
 
+Además de las citadas, se ha utilizado el framework JQuery para usar ajax y hacer una llamada al servicio de metereología.
+
 El usuario selecciona un lugar en el mapa y se mostrará mediante un pop up la información metereológica actual y la 
 previsión para los próximos días. Adicionalmente se podrá introducir una dirección que se mostrará en el mapa.
 
